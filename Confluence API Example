@@ -1,0 +1,23 @@
+from PythonConfluenceAPI import ConfluenceAPI
+import json
+
+#get package library: https://github.com/pushrodtechnology/PythonConfluenceAPI
+
+api = ConfluenceAPI('se.bastian.esch@gmail.com', 'qUj9+UMj7Q', 'https://ibsolution.atlassian.net/wiki')
+new_pages = api.get_content(space_key='SAPTECH')
+id_content = api.get_content_by_id('117873296')
+id_child_content = api.get_content_children('2523167')
+print("Content pages:")
+# for page in new_pages:
+#     try:
+#         compatible_print("{} - {} ({})".format(page.get("space", {}).get("key", "???"),
+#           page.get("title", "(No title)"), page.get("id", "(No ID!?)")))
+#         content = page.get("body", {}).get("view", {}).get("value", "No content.")
+#         content = content[:37] + "..." if len(content) > 40 else content
+#         compatible_print("Preview: {}".format(content))
+#     except AttributeError:
+#         # counters is not a dictionary, ignore and move on
+#         pass
+#     compatible_print(page)
+print(json.dumps(id_content, indent=2))
+
