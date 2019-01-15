@@ -1,12 +1,13 @@
 from PythonConfluenceAPI import ConfluenceAPI
 import json
+import requests
 
 
 
 api = ConfluenceAPI('se.bastian.esch@gmail.com', 'qUj9+UMj7Q', 'https://ibsolution.atlassian.net/wiki')
 new_pages = api.get_content(space_key='SAPTECH')
-id_content = api.get_content_by_id('117873296', expand = 'body.storage')
-id_child_content = api.get_content_children('2523167')
+#id_content = api.get_content_by_id('117873296', expand = 'body.storage')
+#id_child_content = api.get_content_children('2523167')
 
 content_data = json.dumps(new_pages, indent=2)
 getJson = json.loads(content_data)
@@ -22,12 +23,12 @@ content_list = []
 for i in getJson['results']:
     print('ID: ' + i['id'])
     id_content = api.get_content_by_id(i['id'], expand = 'body.storage')
-    #id_content = json.dumps(id_content, indent=2)
+    id_content = json.dumps(id_content, indent=2)
     print(id_content)
-    content_list.append(json.dumps(id_content, indent=2))
+    #content_list.append(json.dumps(id_content, indent = 4))
 
-
-with open('data.json', 'w') as f:
-    json.dump(content_list, f, indent=2)
+#print(content_list)
+# with open('data.json', 'w') as f:
+#     json.dump(content_list, f, indent = 4)
 
 
