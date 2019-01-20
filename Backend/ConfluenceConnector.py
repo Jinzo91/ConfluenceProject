@@ -1,8 +1,10 @@
 from PythonConfluenceAPI import ConfluenceAPI
 import json
+from pymongo import MongoClient
 import requests
 
-
+#connection to mongodb
+client = MongoClient('localhost', 27017)
 
 api = ConfluenceAPI('se.bastian.esch@gmail.com', 'qUj9+UMj7Q', 'https://ibsolution.atlassian.net/wiki')
 new_pages = api.get_content(space_key='SAPTECH')
