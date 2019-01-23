@@ -1,0 +1,41 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:tnt="sap.tnt"
+	controllerName="sap.ui.demo.walkthrough.controller.Login" xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:l="sap.ui.layout">
+	<Page title="{i18n>homePageTitle}">
+		
+		
+		<f:SimpleForm id="SimpleFormChange354"
+			editable="true"
+			layout="ResponsiveGridLayout"
+			title="Login"
+			singleContainerFullSize="false" >
+			<f:content>
+				<Input
+				value="{/recipient/url}"
+				description="Url"
+				valueLiveUpdate="true"
+				width="60%"/>
+				<Input
+				value="{/recipient/userName}"
+				description="User Name"
+				valueLiveUpdate="true"
+				width="60%"/>
+				<Input
+				value="{/recipient/password}"
+				description="Password"
+				type="Password"
+				valueLiveUpdate="true"
+				width="60%"/>
+				<Button
+				text="{i18n>connectButtonText}"
+				press=".onLogin"
+				class="myCustomButton"/>
+			
+				
+			</f:content>
+		</f:SimpleForm>
+	
+
+	</Page>
+</mvc:View>
