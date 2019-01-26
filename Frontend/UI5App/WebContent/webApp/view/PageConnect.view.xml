@@ -1,0 +1,50 @@
+<mvc:View
+	controllerName="webApp.controller.PageConnect"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:l="sap.ui.layout">
+	
+	<Panel
+		headerText="{i18n>helloPanelTitle}"
+		class="sapUiResponsiveMargin"
+		width="auto"
+		>
+
+		<VBox class="sapUiSmallMargin">
+		<f:SimpleForm id="SimpleFormChange354"
+			editable="true"
+			layout="ResponsiveGridLayout"
+			title="Connect to Confluence"
+			labelSpanXL="3"
+			labelSpanL="3"
+			labelSpanM="3"
+			labelSpanS="12"
+			adjustLabelSpan="false"
+			emptySpanXL="4"
+			emptySpanL="4"
+			emptySpanM="4"
+			emptySpanS="0"
+			columnsXL="1"
+			columnsL="1"
+			columnsM="1" 
+			singleContainerFullSize="false" >
+			<f:content>
+				<Label text="URL" />
+				<Input id="url"/>
+				<Label text="Username" />
+				<Input id="username" />
+				<Label text="Password" />
+				<Input id="password" type="Password" />
+				
+				<Button id="btnLogin" type="Default" text="Submit" press="onPress">
+				<layoutData>
+						<l:GridData span="XL1 L2 M2 S4" />
+					</layoutData>
+				</Button>
+			</f:content>
+		</f:SimpleForm>
+			
+	</VBox>
+	</Panel>
+</mvc:View>
