@@ -1,0 +1,52 @@
+<mvc:View
+	controllerName="sap.ui.demo.walkthrough.controller.HelloPanel"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc">
+	
+	<Panel
+		headerText="{i18n>helloPanelTitle}"
+		class="sapUiResponsiveMargin"
+		width="auto"
+		>
+<!-- 		<headerContent> -->
+<!-- 			<Button -->
+<!-- 				icon="sap-icon://hello-world" -->
+<!-- 				press=".onOpenDialog"/> -->
+<!-- 		</headerContent> -->
+		<content>
+	
+			<Input
+				showSuggestion="true"
+				id="url"
+				value="{/recipient/url}"
+				description="Url"
+				valueLiveUpdate="true"
+				width="60%"/>
+			<Input
+				id="userName"
+				value="{/recipient/userName}"
+				description="User Name"
+				valueLiveUpdate="true"
+				width="60%"/>
+			
+			<Input
+				id="password"
+				value="{/recipient/password}"
+				description="Password"
+				type="Password"
+				valueLiveUpdate="true"
+				width="60%"/>
+			
+			
+			<Button
+				text="{i18n>connectButtonText}"
+				press=".onShowHello"
+				class="myCustomButton"/>
+			
+<!-- 			<FormattedText -->
+<!-- 				htmlText="Hello {/recipient/name}" -->
+<!-- 				class="sapUiSmallMargin sapThemeHighlight-asColor myCustomText"/> -->
+		
+		</content>
+	</Panel>
+</mvc:View>

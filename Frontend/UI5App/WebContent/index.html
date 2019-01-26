@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv='Content-Type' content='text/html;charset=UTF-8' />
+
+
+<script src="resources/sap-ui-core.js"
+				id="sap-ui-bootstrap"
+				data-sap-ui-libs="sap.ui.commons,sap.ui.ux3"
+				data-sap-ui-theme="sap_bluecrystal"
+				data-sap-ui-oninit="module:sap/ui/core/ComponentSupport">
+		</script>
+<!-- add sap.ui.table,sap.ui.ux3 and/or other libraries to 'data-sap-ui-libs' if required -->
+
+<script>
+ 				sap.ui.localResources("webApp");
+ 				
+				jQuery.sap.require("sap.ui.core.routing.Router");
+				jQuery.sap.require("sap.ui.core.routing.HashChanger");
+				
+				var oShell = sap.ui.ux3.Shell("shellId",{
+					appTitle: "Confluence Assistant",
+					showLogoutButton: false,
+					showSearchTool: false,
+					worksetItems: [
+					            new sap.ui.ux3.NavigationItem("pageconnectId",{
+					            	key: "PageConnect",
+					            	text: "Connect To Confluence"
+					            }),
+					            new sap.ui.ux3.NavigationItem("pageoverviewId", {
+					            	key: "Page2",
+					            	text: "Overview Of Documentations"
+					            })
+					],
+					worksetItemSelected: function(e) {
+						this.removeAllContent();
+						
+						var selected = e.getParameter("key");
+						
+						var oHashChanger = new sap.ui.core.routing.HashChanger();
+						oHashChanger.setHash(router.getURL(selected));
+						
+					},
+					content: [new sap.ui.view({
+						id: "view1Id",
+						viewName: "webApp.view.PageConnect",
+						type: sap.ui.core.mvc.ViewType.XML
+					})]
+					
+				});
+				
+				oShell.placeAt('container');
+				
+				var router = new sap.ui.core.routing.Router([
+				   {
+					   pattern: "",
+					   name: "PageConnect",
+					   view: "webApp.view.PageConnect",
+					   viewType: sap.ui.core.mvc.ViewType.XML,
+					   targetControl: "shellId",
+					   targetAggregation: "content", //content/Page
+					   clearTarget: true,
+					   callback: function() {
+						   oShell.setSelectedWorksetItem("pageconnectId");
+					   }
+				   },
+				   {
+					   pattern: ["Profile", "PageOverview"],
+					   name: "PageOverview",
+					   view: "webApp.view.PageOverview",
+					   viewType: sap.ui.core.mvc.ViewType.XML,
+					   targetControl: "shellId",
+					   targetAggregation: "content", 
+					   clearTarget: true,
+					   callback: function() {
+						   oShell.setSelectedWorksetItem("pageoverviewId");
+					   }
+				   } 
+				                                             
+				                                             
+				]); 
+				
+				router.register("appRouter");
+				router.initialize();
+				
+		</script>
+<script>sap.ui.define([
+	"sap/ui/core/UIComponent",
+	"sap/ui/model/json/JSONModel",
+	"sap/ui/Device"
+], function (UIComponent, JSONModel, Device) {
+	"use strict";
+
+	return UIComponent.extend("webApp.Component", {
+
+		metadata: {
+			manifest: "json"
+		},
+
+		init: function () {
+			// call the init function of the parent
+			UIComponent.prototype.init.apply(this, arguments);
+			var oModel = new sap.ui.model.odata.ODataModel("https://jsonplaceholder.typicode.com/todos/1", false);
+			this.setModel(oModel);
+
+			// set device model
+			var oDeviceModel = new JSONModel(Device);
+			oDeviceModel.setDefaultBindingMode("OneWay");
+			this.setModel(oDeviceModel, "device");
+
+			// set dialog
+			//this._helloDialog = new HelloDialog(this.getRootControl());
+
+			// create the views based on the url/hash
+			this.getRouter().initialize();
+
+		},
+
+//		exit : function () {
+//			this._helloDialog.destroy();
+//			delete this._helloDialog;
+//		},
+//
+//		openHelloDialog : function () {
+//			this._helloDialog.open();
+//		},
+
+		getContentDensityClass : function () {
+			if (!this._sContentDensityClass) {
+				if (!Device.support.touch) {
+					this._sContentDensityClass = "sapUiSizeCompact";
+				} else {
+					this._sContentDensityClass = "sapUiSizeCozy";
+				}
+			}
+			return this._sContentDensityClass;
+		}
+
+	});
+
+});</script>
+</head>
+<body class="sapUiBody" role="application">
+	<div id="container"></div>
+<!-- 	<div data-sap-ui-component data-name="webApp" data-id="container" data-settings='{"id" : "walkthrough"}'></div> -->
+</body>
+</html>
