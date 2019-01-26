@@ -121,6 +121,7 @@ def download_confluenceData():
 
     return ('Download successfull!')
 
+#Uses the tag function in ConfluenceConnector.py to generate new labels for the document.
 @app.route('/api/confluencedata/tag/<Id>', methods=['GET'])
 def tag_document(Id):
     confluencedata = mongo.db.confluencedata
