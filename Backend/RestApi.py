@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import jsonify
 from flask import request
+from flask_cors import CORS
 import json
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash
@@ -11,8 +12,9 @@ from Backend.ConfluenceConnector import tag_text
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 
-
+#install neccessary packages + the package future
 app = Flask(__name__)
+CORS(app)
 #Check whether you have a database named projectdb, if not then create one.
 app.config['MONGO_DBNAME'] = 'projectdb'
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/projectdb'
@@ -26,7 +28,7 @@ def hello_server():
 #------User Methods-----#
 
 #lists all users and returns their names
-@app.route('/api/users/all', methods=['GET'])
+@app.route('/api/user/all', methods=['GET'])
 def get_all_users():
     users = mongo.db.users
     output = []
@@ -34,27 +36,38 @@ def get_all_users():
         output.append({'name' : u['name']})
     return jsonify({'result' : output})
 
-#register: creates a new user and saves it to DB. Returns new user name as JSON.
-@app.route('/api/users/register', methods=['POST'])
+#Register: creates a new user and saves it to DB. Returns new user name as JSON.
+@app.route('/api/user/register', methods=['POST'])
 def add_user():
     users = mongo.db.users
-    name = request.json['name']
-    password = request.json['password']
+    name = ''
+    password =''
+    for key in request.form:
+        name = key['name']
+        password = key['password']
+
     encryptedPassword = generate_password_hash(password)
     new_user = users.insert({'name': name, 'password': encryptedPassword})
     u = users.find_one({'_id': new_user})
-    output = {'name' : u['name'], 'password': u['password']}
+    output = {'name' : u['name']}
     return jsonify({'result' : output}) #returns a json object and the HTTP status code (eg. 200: success, 400: failure etc.)
 
-#login
-@app.route('/api/users/login', methods=['POST'])
+#Login
+@app.route('/api/user/login', methods=['POST'])
 def login_user():
     users = mongo.db.users
-    name = request.json['name']
-    password = request.json['password']
+    name = ''
+    password = ''
+    print(request.form)
+    name = request.form['name']
+    password = request.form['password']
+    # for key in request.form:
+    #     name = key['name']
+    #     password = key['password']
+
     user = users.find_one({'name': name})
-    hash = user['password'] #gets hashed password from DB
-    if check_password_hash(hash, password): #validates hash with input password
+    hashedPassword = user['password'] #gets hashed password from DB
+    if check_password_hash(hashedPassword, password): #validates encrypted password with input password
         output = {'name' : user['name']}
         return jsonify({'result' : output})
     else:
@@ -73,7 +86,7 @@ def get_all_confluenceData():
     return jsonify({'result' : output}) #every return has HTTP status code
 
 
-#@ID: searches database and returns only matching data
+#Searches database and returns only matching ID and data
 @app.route('/api/confluencedata/<Id>', methods=['GET'])
 def get_document_by_Id(Id):
     confluencedata = mongo.db.confluencedata
@@ -83,17 +96,6 @@ def get_document_by_Id(Id):
     else:
         output = "No document with ID: " + Id + " found."
     return jsonify({'result' : output})
-
-#if-else clause searches and returns only matching data
-# @app.route('/confluencedata', methods=['GET'])
-# def get_one_star(name):
-#   # confluencedata = mongo.db.confluencedata
-#   # s = confluencedata.find_one({'name' : name})
-#   # if s:
-#   #   output = {'name' : s['name'], 'distance' : s['distance']}
-#   # else:
-#   #   output = "No such name"
-#   return jsonify({'result' : output})
 
 
 #downloads data from confluence API and saves it in the database
@@ -121,6 +123,7 @@ def download_confluenceData():
 
     return ('Download successfull!')
 
+
 #Uses the tag function in ConfluenceConnector.py to generate new labels for the document.
 @app.route('/api/confluencedata/tag/<Id>', methods=['GET'])
 def tag_document(Id):
@@ -131,6 +134,7 @@ def tag_document(Id):
         tagged_text = tag_text(json.dumps(output, indent=2))
         #stopWords = set(stopwords.words("english"))
         #words = word_tokenize(json.dumps(output, indent=2))
+
     else:
         tagged_text = "No document with ID: " + Id + " found."
     return jsonify({'result' : tagged_text})
