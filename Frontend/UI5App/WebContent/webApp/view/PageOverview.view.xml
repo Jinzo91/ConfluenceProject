@@ -1,103 +1,59 @@
 <mvc:View
  	controllerName="webApp.controller.PageOverview" 
 	xmlns="sap.m"
-	xmlns:mvc="sap.ui.core.mvc">
-	<Table
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:table="sap.ui.table"
+	xmlns:l="sap.ui.commons.layout"
+	xmlns:html="http//www.w3.org/1999/xhtml">
+
+	<Panel 
+		class="sapUiResponsiveMargin"
+		width="auto">
+	 	<Bar>
+	 		<contentLeft>
+	 			<SearchField search="HandleSearch" />
+	 		</contentLeft>
+	 	</Bar>
+	</Panel>
+	<table:Table
 		id="pageoverview"
 		class="sapUiResponsiveMargin"
 		width="auto"
-		items="{
-			path : 'invoice>/Invoices',
-			sorter : {
-				path : 'ShipperName',
-				group : true
-			}
-		}">
-		<headerToolbar>
-			<Toolbar>
-				<Title text="Overview of Documentations"/>
-				<ToolbarSpacer/>
-				<SearchField width="50%" search="onFilterInvoices"/>
-			</Toolbar>
-		</headerToolbar>
+		visibleRowCount="12"
+		selectionMode="Single"
+		editable="false"
+		rows="{/result}"
+		rowSelectionChange="updateDetails"
 		
-<!-- 		<columns> -->
-			
-<!-- 			<Column> -->
-<!-- 				<Text text="{/recipient/username}"/> -->
-<!-- 			</Column> -->
-<!-- 			<Column -->
-<!-- 				minScreenWidth="Small" -->
-<!-- 				demandPopin="true"> -->
-<!-- 				<Text text="Tags"/> -->
-<!-- 			</Column> -->
-<!-- 			<Column -->
-<!-- 				hAlign="End"> -->
-<!-- 				<Text text="Date"/> -->
-<!-- 			</Column> -->
-<!-- 		</columns> -->
+		>
+		
+	
+		<table:Column sortProperty="{tags}">
+			<table:label>
+				<Label text="Documents" design="Bold"/>
+			</table:label>
+			<table:template>
+				<Label text="{title}"/>
+			</table:template>
+		</table:Column>
+		<table:Column>
+			<table:label>
+				<Label text="tags" design="Bold"/>
+			</table:label>
+			<table:template>
+				<Label text="{tags}"></Label>
+			</table:template>
+		</table:Column>
+		<table:Column>
+			<table:label>
+				<Label text="date" design="Bold"/>
+			</table:label>
+			<table:template>
+				<Label text="{date}"></Label>
+			</table:template>
+		</table:Column>
 
-<!-- 		<items> -->
-<!-- 			<ColumnListItem -->
-<!-- 				type="Navigation" -->
-<!-- 				press="onPress"> -->
-<!-- 				<cells> -->
-<!-- 					<Text text="{webApp.Invoices>ShippedDate}"/> -->
-<!-- 				</cells> -->
-<!-- 			</ColumnListItem> -->
-<!-- 		</items> -->
-		
-		<columns>
-<!-- 			<Column -->
-<!-- 				hAlign="End" -->
-<!-- 				minScreenWidth="Small" -->
-<!-- 				demandPopin="true" -->
-<!-- 				width="4em"> -->
-<!-- 				<Text text="{i18n>columnQuantity}"/> -->
-<!-- 			</Column> -->
-			<Column>
-				<Text text="{i18n>docTitle}"/>
-			</Column>
-			<Column
-				minScreenWidth="Small"
-				demandPopin="true">
-				<Text text="{i18n>docTags}"/>
-			</Column>
-<!-- 			<Column -->
-<!-- 				minScreenWidth="Tablet" -->
-<!-- 				demandPopin="false"> -->
-<!-- 				<Text text="{i18n>columnSupplier}"/> -->
-<!-- 			</Column> -->
-			<Column
-				hAlign="End">
-				<Text text="{i18n>docDate}"/>
-			</Column>
-		</columns>
-		<items>
-			<ColumnListItem
-				type="Navigation"
-				press="onPress">
-				<cells>
-<!-- 				<ObjectNumber number="{invoice>Quantity}" emphasized="false"/> -->
-					<ObjectIdentifier title="{invoice>Title}"/>
-<!-- 					<Text text="{ -->
-<!-- 						path: 'invoice>Status', -->
-<!-- 						formatter: '.formatter.statusText' -->
-<!-- 					}"/> -->
-					<Text text="{invoice>ShipperName}"/>
-<!-- 					<ObjectNumber -->
-<!-- 						number="{ -->
-<!-- 							parts: [{path: 'invoice>ExtendedPrice'}, {path: 'view>/currency'}], -->
-<!-- 							type: 'sap.ui.model.type.Currency', -->
-<!-- 							formatOptions: { -->
-<!-- 								showMeasure: false -->
-<!-- 							} -->
-<!-- 						}" -->
-<!-- 						unit="{view>/currency}" -->
-<!-- 						state="{= ${invoice>ExtendedPrice} > 50 ? 'Error' : 'Success' }"/> -->
-					<Text text="{invoice>ShippedDate}"/>
-				</cells>
-			</ColumnListItem>
-		</items>
-	</Table>
+	</table:Table>
+
+
 </mvc:View>

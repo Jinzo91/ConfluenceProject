@@ -1,0 +1,49 @@
+<mvc:View
+	controllerName="webApp.controller.PageDetail"
+	height="100%"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page
+		showHeader="false"
+		class="sapUiSmallMargin"
+		showNavButton="true"
+		navButtonPress="onNavBack"
+		>
+		<subHeader>
+			<Toolbar>
+				<Button type="Back" tooltip="Back" press="onNavBack"/>
+				<Label text="{/title}"/>
+			</Toolbar>
+		</subHeader>
+		
+			<VBox
+			class="sapUiSmallMargin"
+			>
+				<Label text="{/date}"/>
+
+				<html:center>
+						<Text id="body"
+							width="80%"
+							text="{/body}"
+							/>
+				</html:center>
+
+				<Label text="Tags:"/>
+				<Input 
+				width="80%"
+				type="tag"
+				value="{/tags}"/>
+
+			</VBox>
+		<footer>
+			<Toolbar>
+				<ToolbarSpacer/>
+				<Button text="Generate Tags" type="tag" press="tagging"/>
+				<Button id="accept" text="Accept" type="Accept" press="acceptTags"/>
+				<Button text="Reject" type="Reject" press="rejectTags"/>
+				
+			</Toolbar>
+		</footer>
+	</Page>
+</mvc:View>

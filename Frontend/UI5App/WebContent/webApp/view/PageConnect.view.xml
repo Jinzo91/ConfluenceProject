@@ -5,6 +5,7 @@
 	xmlns:f="sap.ui.layout.form"
 	xmlns:l="sap.ui.layout">
 	
+	
 	<Panel
 		headerText="{i18n>helloPanelTitle}"
 		class="sapUiResponsiveMargin"
@@ -12,7 +13,7 @@
 		>
 
 		<VBox class="sapUiSmallMargin">
-		<f:SimpleForm id="SimpleFormChange354"
+		<f:SimpleForm
 			editable="true"
 			layout="ResponsiveGridLayout"
 			title="Connect to Confluence"
