@@ -1,5 +1,11 @@
 from PythonConfluenceAPI import ConfluenceAPI
 import json
+from textblob import TextBlob
+
+def tag_text(document):
+    text = TextBlob(document)
+    taggedText = text.tags
+    return taggedText
 
 def get_content():
     api = ConfluenceAPI('se.bastian.esch@gmail.com', 'qUj9+UMj7Q', 'https://ibsolution.atlassian.net/wiki')
