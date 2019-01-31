@@ -31,7 +31,7 @@
 	
 				<Label text="" />
 				<html:div align="right">
-				<Button id="connect" type="Default" text="Submit" press="onPress"/>
+				<Button id="connect" type="Default" text="Log in" press="onPress"/>
 				</html:div>
 			</f:content>
 		</f:SimpleForm>

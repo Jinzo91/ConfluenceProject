@@ -1,12 +1,30 @@
 sap.ui.controller("webApp.controller.PageOverview",{
 
 		onInit: function () {
-			this.getView().setModel(sap.ui.getCore().getModel(this.oModel));//global variable from sap.ui.getCore()
-			this.dataModel = new sap.ui.model.json.JSONModel();
 			
+			this.dataModel = new sap.ui.model.json.JSONModel();
+			this.oDownload = new sap.ui.model.json.JSONModel();
+			this.oLocalModel = new sap.ui.model.json.JSONModel();
+			var localName = {};
 			this.i = 1;
 			this.j = 1;
 			this.q = 1;
+		},
+		Download: function(oEvent){
+			  this.oDownload = new sap.ui.model.json.JSONModel("http://127.0.0.1:5000/api/confluencedata/download");
+			  console.log(this.oDownload);
+			  this.getView().setModel(this.oDownload);
+			  this.showLocalData();
+			  
+			  
+		},
+		showLocalData: function(oEvent){
+			this.oLocalModel = new sap.ui.model.json.JSONModel("http://127.0.0.1:5000/api/confluencedata");
+			this.getView().setModel(this.oLocalModel);//global variable from sap.ui.getCore()
+			var localDataModel = new sap.ui.model.json.JSONModel();
+			localDataModel = sap.ui.getCore().getModel(this.myModel);
+			localName = localDataModel.getData(this.username);
+			console.log(localName);
 		},
 		updateDetails: function(oEvent) {
 			// first, we can get the selected row and information of this row from the event
@@ -111,5 +129,6 @@ sap.ui.controller("webApp.controller.PageOverview",{
 				//new sap.ui.model.Filter("title", sap.ui.model.FilterOperator.Contains, sQuery)
 				
 			}
+			
 
 });

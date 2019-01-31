@@ -4,7 +4,7 @@
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:table="sap.ui.table"
 	xmlns:l="sap.ui.commons.layout"
-	xmlns:html="http//www.w3.org/1999/xhtml">
+	xmlns:html="http://www.w3.org/1999/xhtml">
 
 	<Panel 
 		class="sapUiResponsiveMargin"
@@ -14,6 +14,22 @@
 	 			<SearchField 
 	 			width="70%"
 	 			search="HandleSearch" />
+	 			
+		 			<Button
+		 			press="Download" 
+		 			width="15%"
+		 			icon="sap-icon://download-from-cloud" 
+		 			text="Download Data" 
+		 			type="Transparent" >
+		 			</Button>
+		 			<Button
+		 			press="showLocalData" 
+		 			width="15%"
+		 			icon="sap-icon://show" 
+		 			text="Show Local Data" 
+		 			type="Transparent">
+		 			</Button>
+	 			
 	 		</contentLeft>
 	 	</Bar>
 	</Panel>

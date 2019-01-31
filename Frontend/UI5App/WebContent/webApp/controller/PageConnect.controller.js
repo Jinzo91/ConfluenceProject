@@ -31,14 +31,11 @@ sap.ui.controller("webApp.controller.PageConnect",{
 			//if backend returns success then jumpt to page overview, and back end will download data
 			//if back end returns error then show an error popup for message and jump to Overview.
 			 $.ajax({
-				  type : "Post", 
-				  url : "http://localhost:5000/api/confluencedata/download",
+				  type : "POST", 
+				  url : "http://localhost:5000/api/user/all",
 				  async : false,
 				  data: $.param({url, space, username, password}),
 				  success: function (data) {
-					  
-					  var oModel = new sap.ui.model.json.JSONModel("http://127.0.0.1:5000/api/confluencedata");
-					  sap.ui.getCore().setModel(oModel);
 					  
 					  oHashChanger = sap.ui.core.routing.HashChanger.getInstance();
 					  oHashChanger.setHash(oRouter.getURL("PageOverview"));
@@ -48,8 +45,8 @@ sap.ui.controller("webApp.controller.PageConnect",{
 				  },
 				 error: function (oError){
 					  sap.m.MessageToast.show("Please enter valid information");
-					  oHashChanger = sap.ui.core.routing.HashChanger.getInstance();
-					  oHashChanger.setHash(oRouter.getURL("PageOverview"));
+					  //oHashChanger = sap.ui.core.routing.HashChanger.getInstance();
+					  //oHashChanger.setHash(oRouter.getURL("PageConnect"));
 				  }
 				  
 				  });
