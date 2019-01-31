@@ -1,20 +1,11 @@
-sap.ui.require([
-  "sap/m/FormattedText",
-  "sap/ui/core/HTML"
-], function(HTML) {
-
-  new HTML({
-    content: "<b>Hello</b> <i>world</i>"
-  }).placeAt("body");
-
-});
 sap.ui.controller("webApp.controller.PageDetail",{
-
+		//set Model for view, and the data is from global model "dataModel" to local model "detailModel"  
 		onInit: function () {
-			var oModel = sap.ui.getCore().getModel(this.dataModel);
-			console.log("On Detail Page: ", oModel);
-			this.getView().setModel(oModel);
+			this.detailModel = new sap.ui.model.json.JSONModel();
+			this.detailModel = sap.ui.getCore().getModel(this.dataModel);
+			this.getView().setModel(this.detailModel);
 		},
+		//go back to pageOverview
 		onNavBack:function()
 		{
 			var oHistory = sap.ui.core.routing.History.getInstance();
@@ -24,10 +15,10 @@ sap.ui.controller("webApp.controller.PageDetail",{
 				window.history.go(-1);
 			} 
 			else {
-				oHashChanger.setHash(oRouter.getURL('PageDetail'))
+				oHashChanger.setHash(oRouter.getURL('PageOverview'))
 			}
 		},
-		updateDetails: function(oEvent) {
+		tagging: function(oEvent) {
 //
 //			
 //			var rowContext = oEvent.getParameter("rowContext");
@@ -42,5 +33,11 @@ sap.ui.controller("webApp.controller.PageDetail",{
 //			oHashChanger = sap.ui.core.routing.HashChanger.getInstance();
 //			oHashChanger.setHash(oRouter.getURL('PageDetail'));
 			},
+		acceptTags: function(oEvent) {
+			
+		},
+		rejectTags: function(oEvent) {
+			
+		},
 
 });

@@ -99,9 +99,9 @@ def get_document_by_Id(Id):
 
 
 #downloads data from confluence API and saves it in the database
-@app.route('/api/confluencedata/download', methods=['GET'])
+@app.route('/api/confluencedata/download', methods=[''])
 def download_confluenceData():
-    confluenceData = mongo.db.confluencedata
+    confluenceData = mongo.db.confluencedataPOST
     documents = get_content()
 
     #Mapping of json values from Confluence documents. Extracted json structure has to be the same as database structure.

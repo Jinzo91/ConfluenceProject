@@ -11,7 +11,9 @@
 		width="auto">
 	 	<Bar>
 	 		<contentLeft>
-	 			<SearchField search="HandleSearch" />
+	 			<SearchField 
+	 			width="70%"
+	 			search="HandleSearch" />
 	 		</contentLeft>
 	 	</Bar>
 	</Panel>
@@ -24,13 +26,10 @@
 		editable="false"
 		rows="{/result}"
 		rowSelectionChange="updateDetails"
-		
 		>
-		
-	
-		<table:Column sortProperty="{tags}">
+		<table:Column>
 			<table:label>
-				<Label text="Documents" design="Bold"/>
+				<Button press="sortByTags" icon="sap-icon://sort" text="Documentations" type="Transparent" ></Button>
 			</table:label>
 			<table:template>
 				<Label text="{title}"/>
@@ -38,16 +37,17 @@
 		</table:Column>
 		<table:Column>
 			<table:label>
-				<Label text="tags" design="Bold"/>
+				<Button press="sortByTags" icon="sap-icon://sort" text="Tags" type="Transparent" ></Button>
 			</table:label>
 			<table:template>
 				<Label text="{tags}"></Label>
 			</table:template>
 		</table:Column>
-		<table:Column>
+		<table:Column >
 			<table:label>
-				<Label text="date" design="Bold"/>
+				<Button press="sortByDate" icon="sap-icon://sort" text="Date" type="Transparent"></Button>
 			</table:label>
+				
 			<table:template>
 				<Label text="{date}"></Label>
 			</table:template>

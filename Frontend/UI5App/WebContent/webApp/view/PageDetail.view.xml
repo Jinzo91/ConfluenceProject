@@ -2,6 +2,7 @@
 	controllerName="webApp.controller.PageDetail"
 	height="100%"
 	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:commons="sap.ui.commons"
 	xmlns="sap.m"
 	xmlns:html="http://www.w3.org/1999/xhtml">
 	<Page
@@ -22,24 +23,24 @@
 			>
 				<Label text="{/date}"/>
 
-				<html:center>
-						<Text id="body"
-							width="80%"
-							text="{/body}"
-							/>
+				<html:center>							
+				<commons:FormattedTextView
+            htmlText="{/body}" />		
 				</html:center>
 
 				<Label text="Tags:"/>
+				<html:center>
 				<Input 
 				width="80%"
-				type="tag"
+				
 				value="{/tags}"/>
+				</html:center>
 
 			</VBox>
 		<footer>
 			<Toolbar>
 				<ToolbarSpacer/>
-				<Button text="Generate Tags" type="tag" press="tagging"/>
+				<Button text="Generate Tags" icon="sap-icon://tag" press="tagging"/>
 				<Button id="accept" text="Accept" type="Accept" press="acceptTags"/>
 				<Button text="Reject" type="Reject" press="rejectTags"/>
 				
