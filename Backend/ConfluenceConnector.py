@@ -1,31 +1,23 @@
 from PythonConfluenceAPI import ConfluenceAPI
 import json
-from textblob import TextBlob
 
-def tag_text(document):
-    text = TextBlob(document)
-    taggedText = text.tags
-    return taggedText
 
-def get_content():
-    api = ConfluenceAPI('se.bastian.esch@gmail.com', 'qUj9+UMj7Q', 'https://ibsolution.atlassian.net/wiki')
-    new_pages = api.get_content(expand=('body.storage,history,metadata.labels'))#grabs all content if no parameters specified
-    #id_content = api.get_content_by_id('117873296', expand = 'body.storage')
-    #id_child_content = api.get_content_children('2523167')
+#required parameters: username, passsword, url
+#optional: Confluence spaceKey, default is 'SAPTECH'
+def get_content(username, password, url, spaceKey='SAPTECH'):
+    # username = 'se.bastian.esch@gmail.com'
+    # password = 'qUj9+UMj7Q'
+    # url = 'https://ibsolution.atlassian.net/wiki'
+    api = ConfluenceAPI(username, password, url)
+    #gets the content based on the content type page and a space key (default=SAPTECH).
+    #Set limit: Confluence server sided response has max-limit of 100 results per request, higher is not possible and default is 25.
+    #Needs pagination and for-loops to get more results.
+    new_pages = api.get_content(expand=('body.storage,history,metadata.labels'), space_key=spaceKey, content_type='page', limit=100)
+
     content_data = json.dumps(new_pages, indent=2)#careful: do not json.dump twice
     getJson = json.loads(content_data)
     #print(content_data)
     print("Loading Confluence data...")
 
-    #Testing code
-    tags = []
-    labels = []
-    for i in getJson['results']:
-        for j in i['metadata']['labels']['results']:
-            tags.append(j['label'])
-        labels.append(tags)
-        tags = []
-    #print(labels)
-    return getJson
 
-#get_content()
+    return getJson

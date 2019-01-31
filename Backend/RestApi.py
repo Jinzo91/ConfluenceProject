@@ -7,36 +7,34 @@ from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 from Backend.ConfluenceConnector import get_content
-from Backend.ConfluenceConnector import tag_text
+#from Backend.algorithm import
 
-from nltk.tokenize import word_tokenize, sent_tokenize
-from nltk.corpus import stopwords
 
-#install neccessary packages + the package future
+#install neccessary packages + the package _future_
+#Initiliazes the rest API as a flask app
 app = Flask(__name__)
+#Allows cross domain data transfer (required for data transfer between localhosts)
 CORS(app)
 #Check whether you have a database named projectdb, if not then create one.
 app.config['MONGO_DBNAME'] = 'projectdb'
+#MongoDB URI to connect to DB looks like this:
 app.config['MONGO_URI'] = 'mongodb://localhost:27017/projectdb'
-
 mongo = PyMongo(app)
 
+#global variables for authentication purposes.
+globalUser = ''
+password = ''
+url =''
+space = None
+
+#After server is started it will show a message.
 @app.route('/')
 def hello_server():
     return 'Server is up and running.'
 
 #------User Methods-----#
 
-#lists all users and returns their names
-@app.route('/api/user/all', methods=['GET'])
-def get_all_users():
-    users = mongo.db.users
-    output = []
-    for u in users.find():
-        output.append({'name' : u['name']})
-    return jsonify({'result' : output})
-
-#Register: creates a new user and saves it to DB. Returns new user name as JSON.
+#Register: creates a new user, hashes the password and saves it to DB. Returns new user name as JSON.
 @app.route('/api/user/register', methods=['POST'])
 def add_user():
     users = mongo.db.users
@@ -52,36 +50,41 @@ def add_user():
     output = {'name' : u['name']}
     return jsonify({'result' : output}) #returns a json object and the HTTP status code (eg. 200: success, 400: failure etc.)
 
-#Login
+#Login: authenticates the user.
+#Saves credentials to connect to Confluence.
 @app.route('/api/user/login', methods=['POST'])
 def login_user():
     users = mongo.db.users
-    name = ''
-    password = ''
-    print(request.form)
-    name = request.form['name']
-    password = request.form['password']
-    # for key in request.form:
-    #     name = key['name']
-    #     password = key['password']
-
-    user = users.find_one({'name': name})
+    print(request.values)
+    global url
+    url = request.values('url')
+    global space
+    space = request.values('space')
+    global globalUser
+    globalUser = request.values['username']
+    global password
+    password = request.values['password']
+    encryptedPassword = generate_password_hash(password)
+    users.update_one({'name': globalUser},
+                     {'$set': {'name': globalUser, 'password': encryptedPassword}})
+    user = users.find_one({'name': globalUser})
     hashedPassword = user['password'] #gets hashed password from DB
     if check_password_hash(hashedPassword, password): #validates encrypted password with input password
         output = {'name' : user['name']}
-        return jsonify({'result' : output})
+        return jsonify({'name' : output})
     else:
         return False
 
 
 
-#------Confluence Data Methods-----#
-#lists all users and returns their names
-@app.route('/api/confluencedata', methods=['GET'])
+#------Confluence Methods-----#
+#Lists all documents from the DB according to logged in user.
+@app.route('/api/confluencedata', methods=['POST'])
 def get_all_confluenceData():
     confluencedata = mongo.db.confluencedata
+    requestName = request.values('username')
     output = []
-    for u in confluencedata.find():
+    for u in confluencedata.find({'name': requestName}):
         output.append({'documentId' : u['documentId'], 'title' : u['title'], 'date' : u['date'], 'body' : u['body'], 'tags' : u['tags']})
     return jsonify({'result' : output}) #every return has HTTP status code
 
@@ -98,12 +101,12 @@ def get_document_by_Id(Id):
     return jsonify({'result' : output})
 
 
-#downloads data from confluence API and saves it in the database
-@app.route('/api/confluencedata/download', methods=['GET'])
+#Downloads data from confluence API using the given login parameters
+@app.route('/api/confluencedata/download', methods=['POST'])
 def download_confluenceData():
     confluenceData = mongo.db.confluencedata
-    documents = get_content()
-
+    documents = get_content(globalUser, password, url, space)
+    #print(documents)
     #Mapping of json values from Confluence documents. Extracted json structure has to be the same as database structure.
     for doc in documents['results']:
         documentId = doc['id']
@@ -116,12 +119,10 @@ def download_confluenceData():
             tags = i['label']
             labels.append(tags)
             tags = ""
-        if labels:
-            print(labels[0])
-        confluenceData.update({'documentId': documentId},
-            {'documentId': documentId, 'title': title, 'date': date, 'body': body, 'tags': labels}, upsert=True)  # database structure
+        confluenceData.update_one({'documentId': documentId},
+                                  {'$set': {'documentId': documentId, 'title': title, 'date': date, 'body': body, 'tags': labels, 'name': globalUser}}, upsert=True)  # database structure
 
-    return ('Download successfull!')
+    return jsonify(documents)
 
 
 #Uses the tag function in ConfluenceConnector.py to generate new labels for the document.

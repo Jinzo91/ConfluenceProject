@@ -1,14 +1,6 @@
 import nltk
-import math
-import string
-from nltk.tokenize import word_tokenize, sent_tokenize
-from nltk.corpus import stopwords
-from collections import Counter
-from nltk.stem.porter import*
-#nltk.download()
-# nltk.download('punkt')
-# nltk.download('stopwords')
-from textblob import TextBlob
+from nltk.text import TextCollection
+from nltk.tokenize import word_tokenize
 from bs4 import BeautifulSoup
 
 text1 = "<p>Die Change Tracker Tabelle in der Datenbank hat im Auslieferungszustand keine Indizes. Sobald die Tabelle w&auml;chst, "
@@ -16,45 +8,6 @@ text2 = "The Georgetown experiment in 1954 involved fully automatic translation 
 text3 = "During the 1970s, many SAP SAP SAP SAP SAPprogrammers began to write conceptual ontologies, which structured real-world information into computer-understandable data. Examples are MARGIE (Schank, 1975), SAM (Cullingford, 1978), PAM (Wilensky, 1978), TaleSpin (Meehan, 1976), QUALM (Lehnert, 1977), Politics (Carbonell, 1979), and Plot Units (Lehnert 1981). During this time, many chatterbots were written including PARRY, Racter, and Jabberwacky。"
 
 
-def get_tokens(text):
-    # lower = text.lower()
-    # remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
-    # no_punctuation = lower.translate(remove_punctuation_map)
-    tokens = nltk.word_tokenize(text)
-    return tokens
-
-
-def stem_tokens(tokens, stemmer):
-    stemmed = []
-    for item in tokens:
-        stemmed.append(stemmer.stem(item))
-
-    return stemmed
-
-
-def tf(word, count):
-    return count[word] / sum(count.values())
-
-
-def n_containing(word, count_list):
-    return sum(1 for count in count_list if word in count)
-
-
-def idf(word, count_list):
-    return math.log(len(count_list)) / (1 + n_containing(word, count_list))
-
-
-def tfidf(word, count, count_list):
-    return tf(word, count) * idf(word, count_list)
-
-
-def count_term(text):
-    tokens = get_tokens(text)
-    #filtered = [w for w in tokens if not w in stopwords.words('english')]
-    #stemmer = PorterStemmer()
-    #stemmed = stem_tokens(filtered, stemmer)
-    count = Counter(tokens)
-    return count
 
 def main():
     title = "SAP Tutorial"
@@ -62,20 +15,19 @@ def main():
     soup = BeautifulSoup(texts, 'html.parser')
     soup = soup.get_text()
     print(soup)
-    nouns = get_tokens(soup)
-    nouns = [word for (word,pos) in nltk.pos_tag(nouns) if pos[0] == 'N']
-    print(nouns)
-    countlist = []
-    countlist.append(count_term(soup))
-    print(countlist)
-    for i, count in enumerate(countlist):
+    soup = word_tokenize(soup)
+    print(soup)
+    documents = TextCollection(soup)
+    nouns = [word for (word,pos) in nltk.pos_tag(documents) if pos[0] == 'N']
+    print(documents)
+    for i, words in enumerate(documents):
         print("Top words in document {}".format(i + 1))
-        scores = {word: tfidf(word, count, countlist) for word in count}
+        scores = {word: documents.tf_idf(word, soup) for word in words}
         print(scores)
         sorted_words = sorted(scores.items(), key=lambda x: x[1], reverse=True)
         print(sorted_words)
         for word, score in sorted_words[:]:
-            if any(word in countlist for word in nouns):
+            if any(word in soup for word in nouns):
                 print(word)
                 print("\tWord: {}, TF-IDF: {}".format(word, round(score, 5)))
 
