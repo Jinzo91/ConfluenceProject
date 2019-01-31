@@ -3,49 +3,38 @@
 	xmlns="sap.m"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:f="sap.ui.layout.form"
-	xmlns:l="sap.ui.layout">
-	
-	
+	xmlns:l="sap.ui.layout"
+	xmlns:html="http://www.w3.org/1999/xhtml">
 	<Panel
-		headerText="{i18n>helloPanelTitle}"
 		class="sapUiResponsiveMargin"
 		width="auto"
 		>
-
 		<VBox class="sapUiSmallMargin">
 		<f:SimpleForm
 			editable="true"
 			layout="ResponsiveGridLayout"
 			title="Connect to Confluence"
-			labelSpanXL="3"
-			labelSpanL="3"
-			labelSpanM="3"
-			labelSpanS="12"
 			adjustLabelSpan="false"
-			emptySpanXL="4"
-			emptySpanL="4"
-			emptySpanM="4"
-			emptySpanS="0"
-			columnsXL="1"
-			columnsL="1"
-			columnsM="1" 
-			singleContainerFullSize="false" >
+			emptySpanL="4">
 			<f:content>
 				<Label text="URL" />
 				<Input id="url"/>
+				
+				<Label text="Confluence Space (optional)" />
+				<Input id="space"  />
+				
 				<Label text="Username" />
 				<Input id="username" />
+
 				<Label text="Password" />
 				<Input id="password" type="Password" />
-				
-				<Button id="btnLogin" type="Default" text="Submit" press="onPress">
-				<layoutData>
-						<l:GridData span="XL1 L2 M2 S4" />
-					</layoutData>
-				</Button>
+	
+				<Label text="" />
+				<html:div align="right">
+				<Button id="connect" type="Default" text="Log in" press="onPress"/>
+				</html:div>
 			</f:content>
 		</f:SimpleForm>
-			
 	</VBox>
 	</Panel>
 </mvc:View>

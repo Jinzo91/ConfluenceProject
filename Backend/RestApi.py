@@ -101,6 +101,7 @@ def get_document_by_Id(Id):
     return jsonify({'result' : output})
 
 
+
 #Downloads data from confluence API using the given login parameters
 @app.route('/api/confluencedata/download', methods=['POST'])
 def download_confluenceData():
@@ -125,20 +126,20 @@ def download_confluenceData():
     return jsonify(documents)
 
 
-#Uses the tag function in ConfluenceConnector.py to generate new labels for the document.
-@app.route('/api/confluencedata/tag/<Id>', methods=['GET'])
-def tag_document(Id):
-    confluencedata = mongo.db.confluencedata
-    s = confluencedata.find_one({'documentId' : Id})
-    if s:
-        output = {'documentId': s['documentId'], 'title': s['title'], 'body': s['body'], 'tags': s['tags']}
-        tagged_text = tag_text(json.dumps(output, indent=2))
-        #stopWords = set(stopwords.words("english"))
-        #words = word_tokenize(json.dumps(output, indent=2))
-
-    else:
-        tagged_text = "No document with ID: " + Id + " found."
-    return jsonify({'result' : tagged_text})
+# #Uses the tag function in ConfluenceConnector.py to generate new labels for the document.
+# @app.route('/api/confluencedata/tag/<Id>', methods=['GET'])
+# def tag_document(Id):
+#     confluencedata = mongo.db.confluencedata
+#     s = confluencedata.find_one({'documentId' : Id})
+#     if s:
+#         output = {'documentId': s['documentId'], 'title': s['title'], 'body': s['body'], 'tags': s['tags']}
+#         tagged_text = tag_text(json.dumps(output, indent=2))
+#         #stopWords = set(stopwords.words("english"))
+#         #words = word_tokenize(json.dumps(output, indent=2))
+#
+#     else:
+#         tagged_text = "No document with ID: " + Id + " found."
+#     return jsonify({'result' : tagged_text})
 
 if __name__ == '__main__':
     app.run(debug=True)

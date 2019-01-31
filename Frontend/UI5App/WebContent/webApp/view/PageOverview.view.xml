@@ -4,14 +4,32 @@
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns:table="sap.ui.table"
 	xmlns:l="sap.ui.commons.layout"
-	xmlns:html="http//www.w3.org/1999/xhtml">
+	xmlns:html="http://www.w3.org/1999/xhtml">
 
 	<Panel 
 		class="sapUiResponsiveMargin"
 		width="auto">
 	 	<Bar>
 	 		<contentLeft>
-	 			<SearchField search="HandleSearch" />
+	 			<SearchField 
+	 			width="70%"
+	 			search="HandleSearch" />
+	 			
+		 			<Button
+		 			press="Download" 
+		 			width="15%"
+		 			icon="sap-icon://download-from-cloud" 
+		 			text="Download Data" 
+		 			type="Transparent" >
+		 			</Button>
+		 			<Button
+		 			press="showLocalData" 
+		 			width="15%"
+		 			icon="sap-icon://show" 
+		 			text="Show Local Data" 
+		 			type="Transparent">
+		 			</Button>
+	 			
 	 		</contentLeft>
 	 	</Bar>
 	</Panel>
@@ -24,13 +42,10 @@
 		editable="false"
 		rows="{/result}"
 		rowSelectionChange="updateDetails"
-		
 		>
-		
-	
-		<table:Column sortProperty="{tags}">
+		<table:Column>
 			<table:label>
-				<Label text="Documents" design="Bold"/>
+				<Button press="sortByTags" icon="sap-icon://sort" text="Documentations" type="Transparent" ></Button>
 			</table:label>
 			<table:template>
 				<Label text="{title}"/>
@@ -38,16 +53,17 @@
 		</table:Column>
 		<table:Column>
 			<table:label>
-				<Label text="tags" design="Bold"/>
+				<Button press="sortByTags" icon="sap-icon://sort" text="Tags" type="Transparent" ></Button>
 			</table:label>
 			<table:template>
 				<Label text="{tags}"></Label>
 			</table:template>
 		</table:Column>
-		<table:Column>
+		<table:Column >
 			<table:label>
-				<Label text="date" design="Bold"/>
+				<Button press="sortByDate" icon="sap-icon://sort" text="Date" type="Transparent"></Button>
 			</table:label>
+				
 			<table:template>
 				<Label text="{date}"></Label>
 			</table:template>
