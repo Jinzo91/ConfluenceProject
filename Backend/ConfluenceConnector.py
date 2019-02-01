@@ -1,6 +1,12 @@
 from PythonConfluenceAPI import ConfluenceAPI
 import json
 
+def check_Connection(username, password, url):
+    api = ConfluenceAPI(username, password, url)
+    if api.get_spaces():
+        return True
+    else:
+        return False
 
 #required parameters: username, passsword, url
 #optional: Confluence spaceKey, default is 'SAPTECH'

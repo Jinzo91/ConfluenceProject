@@ -25,7 +25,6 @@ mongo = PyMongo(app)
 globalUser = ''
 password = ''
 url =''
-space = None
 
 #After server is started it will show a message.
 @app.route('/')
