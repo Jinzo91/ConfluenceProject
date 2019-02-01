@@ -55,18 +55,18 @@ def add_user():
 @app.route('/api/user/login', methods=['POST'])
 def login_user():
     users = mongo.db.users
-    print(request.values)
+    req = request.values.to_dict()
     global url
-    url = request.values('url')
+    url = request.values['url']
     global space
-    space = request.values('space')
+    space = request.values['space']
     global globalUser
     globalUser = request.values['username']
     global password
     password = request.values['password']
     encryptedPassword = generate_password_hash(password)
     users.update_one({'name': globalUser},
-                     {'$set': {'name': globalUser, 'password': encryptedPassword}})
+                     {'$set': {'name': globalUser, 'password': encryptedPassword}}, upsert=True)
     user = users.find_one({'name': globalUser})
     hashedPassword = user['password'] #gets hashed password from DB
     if check_password_hash(hashedPassword, password): #validates encrypted password with input password
@@ -79,18 +79,19 @@ def login_user():
 
 #------Confluence Methods-----#
 #Lists all documents from the DB according to logged in user.
-@app.route('/api/confluencedata', methods=['POST'])
+@app.route('/api/confluencedata', methods=['GET', 'POST'])
 def get_all_confluenceData():
     confluencedata = mongo.db.confluencedata
-    requestName = request.values('username')
+    print(request.values)
+    #requestName = request.values['username']
     output = []
-    for u in confluencedata.find({'name': requestName}):
+    for u in confluencedata.find({'name': 'se.bastian.esch@gmail.com'}):
         output.append({'documentId' : u['documentId'], 'title' : u['title'], 'date' : u['date'], 'body' : u['body'], 'tags' : u['tags']})
     return jsonify({'result' : output}) #every return has HTTP status code
 
 
 #Searches database and returns only matching ID and data
-@app.route('/api/confluencedata/<Id>', methods=['GET'])
+@app.route('/api/confluencedata/search/<Id>', methods=['GET'])
 def get_document_by_Id(Id):
     confluencedata = mongo.db.confluencedata
     s = confluencedata.find_one({'documentId' : Id})
@@ -103,7 +104,7 @@ def get_document_by_Id(Id):
 
 
 #Downloads data from confluence API using the given login parameters
-@app.route('/api/confluencedata/download', methods=['POST'])
+@app.route('/api/confluencedata/download', methods=['GET'])
 def download_confluenceData():
     confluenceData = mongo.db.confluencedata
     documents = get_content(globalUser, password, url, space)
@@ -116,12 +117,15 @@ def download_confluenceData():
         body = doc['body']['storage']['value']
         tags = ""
         labels =[]
+        stringLabels = ''
         for i in doc['metadata']['labels']['results']:
             tags = i['label']
             labels.append(tags)
+            stringLabels = ', '.join(labels)
             tags = ""
+            print(stringLabels)
         confluenceData.update_one({'documentId': documentId},
-                                  {'$set': {'documentId': documentId, 'title': title, 'date': date, 'body': body, 'tags': labels, 'name': globalUser}}, upsert=True)  # database structure
+                                  {'$set': {'documentId': documentId, 'title': title, 'date': date, 'body': body, 'tags': stringLabels, 'name': globalUser}}, upsert=True)  # database structure
 
     return jsonify(documents)
 

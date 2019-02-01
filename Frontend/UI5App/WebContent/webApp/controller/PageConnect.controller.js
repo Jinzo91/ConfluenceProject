@@ -19,10 +19,11 @@ sap.ui.controller("webApp.controller.PageConnect",{
 				sap.m.MessageToast.show("Please enter your password");
 			} else{
 			//bind data to myModel and make myModel global
-			this.myModel.setData(username);
-			this.myModel.setData(password);
-			this.myModel.setData(url);
+			this.myModel.setData({"username": username});
+//			this.myModel.setData(password);
+//			this.myModel.setData(url);
 			sap.ui.getCore().setModel(this.myModel);
+			console.log(this.myModel);
 			var oRouter = sap.ui.core.routing.Router.getRouter("appRouter");
 			}
 
@@ -32,7 +33,7 @@ sap.ui.controller("webApp.controller.PageConnect",{
 			//if back end returns error then show an error popup for message and jump to Overview.
 			 $.ajax({
 				  type : "POST", 
-				  url : "http://localhost:5000/api/user/all",
+				  url : "http://localhost:5000/api/user/login",
 				  async : false,
 				  data: $.param({url, space, username, password}),
 				  success: function (data) {

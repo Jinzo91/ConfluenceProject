@@ -18,9 +18,25 @@ sap.ui.controller("webApp.controller.PageDetail",{
 				oHashChanger.setHash(oRouter.getURL('PageOverview'))
 			}
 		},
-		tagging: function(oEvent) {
-//
-//			
+		generateTags: function(oEvent) {
+			var docId = this.detailModel.getData(this.id);
+			
+//			$.ajax({
+//				  type : "POST", 
+//				  url : "http://localhost:5000/api/generateTags",
+//				  async : false,
+//				  data: $.param({docId}),
+//				  success: function (data) {
+//					  this.generateModel = new sap.ui.model.json.JSONModel("http://127.0.0.1:5000/api/generateTags");
+//					  this.getView().setModel(this.oLocalModel);//global variable from sap.ui.getCore()
+//		  },
+//				 error: function (oError){
+//					  sap.m.MessageToast.show("You have not downloaded anything yet!");
+//				  }
+//				  
+//				  });
+			
+			
 //			var rowContext = oEvent.getParameter("rowContext");
 //			var documentTitle = rowContext.getObject().title;
 //			var body = rowContext.getObject().body;

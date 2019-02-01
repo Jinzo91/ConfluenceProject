@@ -19,12 +19,31 @@ sap.ui.controller("webApp.controller.PageOverview",{
 			  
 		},
 		showLocalData: function(oEvent){
+//			this.oLocalModel = new sap.ui.model.json.JSONModel("http://127.0.0.1:5000/api/confluencedata");
+			
 			this.oLocalModel = new sap.ui.model.json.JSONModel("http://127.0.0.1:5000/api/confluencedata");
 			this.getView().setModel(this.oLocalModel);//global variable from sap.ui.getCore()
-			var localDataModel = new sap.ui.model.json.JSONModel();
-			localDataModel = sap.ui.getCore().getModel(this.myModel);
-			localName = localDataModel.getData(this.username);
-			console.log(localName);
+
+//			localDataModel = sap.ui.getCore().getModel(this.myModel);
+//			console.log(localDataModel);
+//			username = localDataModel.getData('username');
+//			console.log(username);
+//			this.getView().setModel(this.oLocalModel);//global variable from sap.ui.getCore()
+//			$.ajax({
+//				  type : "GET", 
+//				  url : "http://localhost:5000/api/confluencedata",
+//				  async : false,
+//				  data: $.param(username),
+//				  success: function () {
+//					  this.oLocalModel = new sap.ui.model.json.JSONModel("http://127.0.0.1:5000/api/confluencedata");
+//					  
+////					  this.getView().setModel(this.oLocalModel);//global variable from sap.ui.getCore()
+//		  },
+//				 error: function (oError){
+//					  sap.m.MessageToast.show("You have not downloaded anything yet!");
+//				  }
+//				  
+//				  });
 		},
 		updateDetails: function(oEvent) {
 			// first, we can get the selected row and information of this row from the event
@@ -64,7 +83,7 @@ sap.ui.controller("webApp.controller.PageOverview",{
 				var oBinding = oList.getBinding("rows");
 				aFilters.push(new sap.ui.model.Filter("title", sap.ui.model.FilterOperator.Contains, sQuery));
 				aFilters.push(new sap.ui.model.Filter("date", sap.ui.model.FilterOperator.Contains, sQuery));
-				aFilters.push(new sap.ui.model.Filter("tags", sap.ui.model.FilterOperator.GE, sQuery));	
+				aFilters.push(new sap.ui.model.Filter("tags", sap.ui.model.FilterOperator.Contains, sQuery));	
 				console.log(aFilters);
 				oBinding.filter(new sap.ui.model.Filter({filters: aFilters, and: false}));
 			},

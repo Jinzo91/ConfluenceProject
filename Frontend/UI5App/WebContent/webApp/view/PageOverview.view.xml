@@ -45,7 +45,7 @@
 		>
 		<table:Column>
 			<table:label>
-				<Button press="sortByTags" icon="sap-icon://sort" text="Documentations" type="Transparent" ></Button>
+				<Button press="sortByTitle" icon="sap-icon://sort" text="Documentations" type="Transparent" ></Button>
 			</table:label>
 			<table:template>
 				<Label text="{title}"/>
