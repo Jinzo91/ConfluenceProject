@@ -2,12 +2,12 @@ from flask import Flask
 from flask import jsonify
 from flask import request
 from flask_cors import CORS
-import json
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 from Backend.ConfluenceConnector import get_content
 from PythonConfluenceAPI import ConfluenceAPI
+from Backend.Algorithm import generateTags
 
 
 #install neccessary packages + the package _future_
@@ -124,27 +124,45 @@ def download_confluenceData():
             labels.append(tags)
             stringLabels = ', '.join(labels)
             tags = ""
-            print(stringLabels)
+            #print(stringLabels)
         confluenceData.update_one({'documentId': documentId},
                                   {'$set': {'documentId': documentId, 'title': title, 'date': date, 'body': body, 'tags': stringLabels, 'name': globalUser}}, upsert=True)  # database structure
 
     return jsonify(documents)
 
+#------Tagging Method-----#
+#Uses the tag function in Algorithm.py to generate new labels for the document.
+tagged_text =''
+@app.route('/api/confluencedata/tag', methods=['POST'])
+def tag_document():
+    confluencedata = mongo.db.confluencedata
+    id = request.values['docId']
+    s = confluencedata.find_one({'documentId': id})
+    if s:
+        title = s['title']
+        body = s['body']
+        tagged_text = generateTags(title, body)
+        output = {'tags': tagged_text}
 
-# #Uses the tag function in ConfluenceConnector.py to generate new labels for the document.
-# @app.route('/api/confluencedata/tag/<Id>', methods=['GET'])
-# def tag_document(Id):
-#     confluencedata = mongo.db.confluencedata
-#     s = confluencedata.find_one({'documentId' : Id})
-#     if s:
-#         output = {'documentId': s['documentId'], 'title': s['title'], 'body': s['body'], 'tags': s['tags']}
-#         tagged_text = tag_text(json.dumps(output, indent=2))
-#         #stopWords = set(stopwords.words("english"))
-#         #words = word_tokenize(json.dumps(output, indent=2))
-#
-#     else:
-#         tagged_text = "No document with ID: " + Id + " found."
-#     return jsonify({'result' : tagged_text})
+    else:
+        output = "No document with ID: " + id + " was found."
+    return (output)
+
+
+@app.route('/api/confluencedata/save/tag', methods=['GET'])
+def save_tag():
+    confluencedata = mongo.db.confluencedata
+    id = request.values['docId']
+    s = confluencedata.find_one({'documentId': id})
+    if s:
+        original_tags = ', '.join(s['tags'])
+        complete_tags = original_tags.append(tagged_text)
+        confluencedata.update_one({'documentId': id}, {'$set': complete_tags})
+        output = complete_tags
+    else:
+        output = "Tags could not be saved for document with ID: " + id
+    return (output)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
