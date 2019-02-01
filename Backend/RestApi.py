@@ -7,7 +7,7 @@ from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 from Backend.ConfluenceConnector import get_content
-#from Backend.algorithm import
+from PythonConfluenceAPI import ConfluenceAPI
 
 
 #install neccessary packages + the package _future_
@@ -69,8 +69,10 @@ def login_user():
     user = users.find_one({'name': globalUser})
     hashedPassword = user['password'] #gets hashed password from DB
     if check_password_hash(hashedPassword, password): #validates encrypted password with input password
-        output = {'name' : user['name']}
-        return jsonify({'name' : output})
+        api = ConfluenceAPI(globalUser, password, url)
+        if api.get_spaces():
+            output = {'name' : user['name']}
+            return jsonify({'name' : output})
     else:
         return False
 
