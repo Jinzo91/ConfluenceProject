@@ -138,7 +138,9 @@ def download_confluenceData():
 
     return jsonify(documents)
 
-#------Tagging Method-----#
+#------Tagging Methods-----#
+#Input: document ID
+#Output: generated tags
 #Uses the tag function in Algorithm.py to generate new labels for the document.
 tagged_text =''
 @app.route('/api/confluencedata/tag', methods=['POST'])
@@ -155,7 +157,9 @@ def tag_document():
         output = "No document with ID: " + id + " was found."
     return jsonify({'tags' : output})
 
-
+#Input: document ID, original tags, newly generated tags
+#Output: filtered tags which are saved to the DB
+#Adds filtered new tags  to the DB after comparing if certain tags already exists or not.
 @app.route('/api/confluencedata/save/tag', methods=['POST'])
 def save_tag():
     confluencedata = mongo.db.confluencedata
@@ -175,9 +179,14 @@ def save_tag():
         print(original_tags)
         if len(newUniqueTags) > 1:
             newUniqueTagsString = ', '.join(newUniqueTags)
-            complete_tags = original_tags + ', ' + newUniqueTagsString
-            confluencedata.update_one({'documentId': id}, {'$set': {'tags': complete_tags}})
-            output = complete_tags
+            if len(original_tags) >= 1:
+                complete_tags = original_tags + ', ' + newUniqueTagsString
+                confluencedata.update_one({'documentId': id}, {'$set': {'tags': complete_tags}})
+                output = complete_tags
+            else:
+                complete_tags = newUniqueTagsString
+                confluencedata.update_one({'documentId': id}, {'$set': {'tags': complete_tags}})
+                output = complete_tags
         else:
             output = original_tags
     else:
