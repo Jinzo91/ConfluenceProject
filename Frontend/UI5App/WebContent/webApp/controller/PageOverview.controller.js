@@ -5,6 +5,7 @@ sap.ui.controller("webApp.controller.PageOverview",{
 			this.dataModel = new sap.ui.model.json.JSONModel();
 			this.oDownload = new sap.ui.model.json.JSONModel();
 			this.oLocalModel = new sap.ui.model.json.JSONModel();
+			this.oConnectModel = new sap.ui.model.json.JSONModel();
 			var localName = {};
 			this.i = 1;
 			this.j = 1;
@@ -20,8 +21,26 @@ sap.ui.controller("webApp.controller.PageOverview",{
 			  
 		},
 		showLocalData: function(oEvent){
-			this.oLocalModel = new sap.ui.model.json.JSONModel("http://127.0.0.1:5000/api/confluencedata");
-			this.getView().setModel(this.oLocalModel);//global variable from sap.ui.getCore()
+			this.oConnectModel = sap.ui.getCore().getModel(this.myModel);
+			var username = this.oConnectModel.oData.username
+			var that = this
+			console.log(username);
+			$.ajax({
+				  type : "POST", 
+				  url : "http://localhost:5000/api/confluencedata",
+				  async : false,
+				  data: $.param({username}),
+				  success: function (data) {
+					  this.oLocalModel = sap.ui.getCore().getModel();
+					  this.oLocalModel = new sap.ui.model.json.JSONModel("http://127.0.0.1:5000/api/confluencedata");
+					  that.getView().setModel(this.oLocalModel);
+					  
+				  },
+				 error: function (oError){
+					  sap.m.MessageToast.show("Something went wrong with show local data!");
+				  }
+			  });
+			
 		},
 		updateDetails: function(oEvent) {
 			// first, we can get the selected row and information of this row from the event
