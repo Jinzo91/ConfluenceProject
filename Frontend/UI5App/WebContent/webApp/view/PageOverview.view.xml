@@ -28,10 +28,12 @@
 		 			text="Show Local Data" 
 		 			type="Transparent">
 		 			</Button>
-	 			
 	 		</contentLeft>
 	 	</Bar>
 	</Panel>
+<!-- 	<Button press="sortByDate" icon="sap-icon://sort" text="Date" type="Transparent" width="10%"/> -->
+<!-- 	<Button press="sortByTitle" icon="sap-icon://sort" text="Documentations" type="Transparent" ></Button> -->
+<!-- 	<Button press="sortByTags" icon="sap-icon://sort" text="Tags" type="Transparent" ></Button> -->
 	<table:Table
 		id="pageoverview"
 		class="sapUiResponsiveMargin"
@@ -60,14 +62,14 @@
 		</table:Column>
 		<table:Column >
 			<table:label>
-				<Button press="sortByDate" icon="sap-icon://sort" text="Date" type="Transparent"></Button>
+				<Button press="sortByDate" icon="sap-icon://sort" text="Date" type="Transparent"/>
 			</table:label>
-				
 			<table:template>
 				<Label text="{date}"></Label>
 			</table:template>
 		</table:Column>
 
+			
 	</table:Table>
 
 

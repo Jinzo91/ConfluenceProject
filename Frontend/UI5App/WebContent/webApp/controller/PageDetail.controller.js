@@ -21,6 +21,7 @@ sap.ui.controller("webApp.controller.PageDetail",{
 			}
 		},
 		generateTags: function(oEvent) {
+			console.log(this.detailModel);
 			var docId = this.detailModel.oData.id
 			//var that = this;
 			console.log('Model from Detail: ', docId);
@@ -67,7 +68,10 @@ sap.ui.controller("webApp.controller.PageDetail",{
 			  });
 		},
 		rejectTags: function() {
-			
+			this.getags={};
+			this.detailModel = sap.ui.getCore().getModel();
+			this.detailModel.setProperty("/newtags", this.getags.tags);
+			sap.m.MessageToast.show("The tags will not be saved.");
 		},
 
 });
