@@ -5,7 +5,6 @@
 	xmlns:table="sap.ui.table"
 	xmlns:l="sap.ui.commons.layout"
 	xmlns:html="http://www.w3.org/1999/xhtml">
-
 	<Panel 
 		class="sapUiResponsiveMargin"
 		width="auto">

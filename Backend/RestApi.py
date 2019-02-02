@@ -7,7 +7,9 @@ from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 from Backend.ConfluenceConnector import get_content
 from PythonConfluenceAPI import ConfluenceAPI
+from string import  punctuation
 from Backend.Algorithm import generateTags
+from Backend.Algorithm import get_tokens
 
 
 #install neccessary packages + the package _future_
@@ -24,8 +26,8 @@ mongo = PyMongo(app)
 #global variables for authentication purposes.
 globalUser = ''
 password = ''
-url =''
-
+url = ''
+space = None
 #After server is started it will show a message.
 @app.route('/')
 def hello_server():
@@ -54,11 +56,14 @@ def add_user():
 @app.route('/api/user/login', methods=['POST'])
 def login_user():
     users = mongo.db.users
-    req = request.values.to_dict()
     global url
     url = request.values['url']
     global space
-    space = request.values['space']
+    if 'space' in request.values:
+        print('space key found')
+        space = request.values['space']
+    else:
+        space = None
     global globalUser
     globalUser = request.values['username']
     global password
@@ -108,7 +113,10 @@ def get_document_by_Id(Id):
 @app.route('/api/confluencedata/download', methods=['GET'])
 def download_confluenceData():
     confluenceData = mongo.db.confluencedata
-    documents = get_content(globalUser, password, url, space)
+    if space != None:
+        documents = get_content(globalUser, password, url, space)
+    else:
+        documents = get_content(globalUser, password, url)
     #print(documents)
     #Mapping of json values from Confluence documents. Extracted json structure has to be the same as database structure.
     for doc in documents['results']:
@@ -142,26 +150,39 @@ def tag_document():
         title = s['title']
         body = s['body']
         tagged_text = generateTags(title, body)
-        output = {'tags': tagged_text}
-
+        output = tagged_text
     else:
         output = "No document with ID: " + id + " was found."
-    return (output)
+    return jsonify({'tags' : output})
 
 
-@app.route('/api/confluencedata/save/tag', methods=['GET'])
+@app.route('/api/confluencedata/save/tag', methods=['POST'])
 def save_tag():
     confluencedata = mongo.db.confluencedata
     id = request.values['docId']
+    originalTags = request.values['originalTags']
+    newTags = request.values['newTags']
+    newTags = ' '.join(word.strip(punctuation) for word in newTags.split()
+                    if word.strip(punctuation))
     s = confluencedata.find_one({'documentId': id})
+    originalTagsToken = get_tokens(originalTags)
+    newTagsToken = get_tokens(newTags)
+    print(newTagsToken)
     if s:
-        original_tags = ', '.join(s['tags'])
-        complete_tags = original_tags.append(tagged_text)
-        confluencedata.update_one({'documentId': id}, {'$set': complete_tags})
-        output = complete_tags
+        newUniqueTags = [w for w in newTagsToken if not w in originalTagsToken]
+        print(newUniqueTags)
+        original_tags = ''.join(s['tags'])
+        print(original_tags)
+        if len(newUniqueTags) > 1:
+            newUniqueTagsString = ', '.join(newUniqueTags)
+            complete_tags = original_tags + ', ' + newUniqueTagsString
+            confluencedata.update_one({'documentId': id}, {'$set': {'tags': complete_tags}})
+            output = complete_tags
+        else:
+            output = original_tags
     else:
         output = "Tags could not be saved for document with ID: " + id
-    return (output)
+    return jsonify({'tags': output})
 
 
 if __name__ == '__main__':

@@ -17,34 +17,44 @@
 				<Label text="{/title}"/>
 			</Toolbar>
 		</subHeader>
-		
+		<Panel>
 			<VBox
 			class="sapUiSmallMargin"
 			>
 				<Label text="{/date}"/>
-
-				<html:center>							
-				<commons:FormattedTextView
-            htmlText="{/body}" />		
-				</html:center>
-
-				<Label text="Tags:"/>
-				<html:center>
-				<Input 
-				width="80%"
 				
-				value="{/tags}{/geTags}"/>
+				<Label id="docId"
+				text="{/id}"/>
+				
+				<html:center style = "margin:40px">							
+				<commons:FormattedTextView
+            		htmlText="{/body}" />		
 				</html:center>
+
+				<html:div align="left"
+				style = "margin:20px">
+				<Label text="Tags:"/>
+				<html:p style = "margin:20px" >
+				<Text 
+				text="{/tags}"/>
+				</html:p>
+				</html:div>
+
+				<html:div align="left"
+				style = "margin:20px">
+				<Button 
+				type="Transparent"
+				text="Generate Tags:"
+				icon="sap-icon://tag"
+				press="generateTags"/>
+				</html:div>
+				<html:div align="left" style = "margin:10px">
+						<Input value="{/newtags}" width="70%"/>
+						<Button id="accept" text="Accept" type="Accept" press="acceptTags" width="10%"/>
+						<Button text="Reject" type="Reject" press="rejectTags" width="10%"/>
+				</html:div>
 
 			</VBox>
-		<footer>
-			<Toolbar>
-				<ToolbarSpacer/>
-				<Button text="Generate Tags" icon="sap-icon://tag" press="generateTags"/>
-				<Button id="accept" text="Accept" type="Accept" press="acceptTags"/>
-				<Button text="Reject" type="Reject" press="rejectTags"/>
-				
-			</Toolbar>
-		</footer>
+			</Panel>
 	</Page>
 </mvc:View>

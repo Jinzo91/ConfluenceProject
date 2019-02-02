@@ -11,43 +11,21 @@ sap.ui.controller("webApp.controller.PageOverview",{
 			this.q = 1;
 		},
 		Download: function(oEvent){
-			  this.oDownload = new sap.ui.model.json.JSONModel("http://127.0.0.1:5000/api/confluencedata/download");
-			  console.log(this.oDownload);
-			  this.getView().setModel(this.oDownload);
-			  this.showLocalData();
+			this.oDownload = new sap.ui.model.json.JSONModel("http://127.0.0.1:5000/api/confluencedata/download");
+			sap.m.MessageToast.show("Downloading...");
+			console.log(this.oDownload);
+			this.getView().setModel(this.oDownload);
+			this.showLocalData();
 			  
 			  
 		},
 		showLocalData: function(oEvent){
-//			this.oLocalModel = new sap.ui.model.json.JSONModel("http://127.0.0.1:5000/api/confluencedata");
-			
 			this.oLocalModel = new sap.ui.model.json.JSONModel("http://127.0.0.1:5000/api/confluencedata");
 			this.getView().setModel(this.oLocalModel);//global variable from sap.ui.getCore()
-
-//			localDataModel = sap.ui.getCore().getModel(this.myModel);
-//			console.log(localDataModel);
-//			username = localDataModel.getData('username');
-//			console.log(username);
-//			this.getView().setModel(this.oLocalModel);//global variable from sap.ui.getCore()
-//			$.ajax({
-//				  type : "GET", 
-//				  url : "http://localhost:5000/api/confluencedata",
-//				  async : false,
-//				  data: $.param(username),
-//				  success: function () {
-//					  this.oLocalModel = new sap.ui.model.json.JSONModel("http://127.0.0.1:5000/api/confluencedata");
-//					  
-////					  this.getView().setModel(this.oLocalModel);//global variable from sap.ui.getCore()
-//		  },
-//				 error: function (oError){
-//					  sap.m.MessageToast.show("You have not downloaded anything yet!");
-//				  }
-//				  
-//				  });
 		},
 		updateDetails: function(oEvent) {
 			// first, we can get the selected row and information of this row from the event
-			//and these information is binded to toDetail
+			//and these information is binded to "toDetail"
 			var rowContext = oEvent.getParameter("rowContext");
 			var title = rowContext.getObject().title;
 			var date = rowContext.getObject().date;
@@ -129,6 +107,8 @@ sap.ui.controller("webApp.controller.PageOverview",{
 				//new sap.ui.model.Filter("title", sap.ui.model.FilterOperator.Contains, sQuery)
 				
 			},
+			//when click button at first time, show table content in descending sort of alphabet based on "title"
+			//the second click show in ascending sort 
 			sortByTitle: function(oEvent){
 				if (this.q % 2 == 1){
 					var cFilter = [];

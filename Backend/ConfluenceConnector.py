@@ -25,5 +25,4 @@ def get_content(username, password, url, spaceKey='SAPTECH'):
     #print(content_data)
     print("Loading Confluence data...")
 
-
     return getJson

@@ -46,11 +46,9 @@ sap.ui.controller("webApp.controller.PageConnect",{
 				  },
 				 error: function (oError){
 					  sap.m.MessageToast.show("Please enter valid information");
-					  //oHashChanger = sap.ui.core.routing.HashChanger.getInstance();
-					  //oHashChanger.setHash(oRouter.getURL("PageConnect"));
 				  }
 				  
-				  });
+			  });
 			
 		},
 

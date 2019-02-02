@@ -4,6 +4,8 @@ sap.ui.controller("webApp.controller.PageDetail",{
 			this.detailModel = new sap.ui.model.json.JSONModel();
 			this.detailModel = sap.ui.getCore().getModel(this.dataModel);
 			this.getView().setModel(this.detailModel);
+			this.setTagModel = new sap.ui.model.json.JSONModel();
+			this.getags = {};
 		},
 		//go back to pageOverview
 		onNavBack:function()
@@ -19,40 +21,52 @@ sap.ui.controller("webApp.controller.PageDetail",{
 			}
 		},
 		generateTags: function(oEvent) {
-			var docId = this.detailModel.getData(this.id);
-			
-//			$.ajax({
-//				  type : "POST", 
-//				  url : "http://localhost:5000/api/generateTags",
-//				  async : false,
-//				  data: $.param({docId}),
-//				  success: function (data) {
-//					  this.generateModel = new sap.ui.model.json.JSONModel("http://127.0.0.1:5000/api/generateTags");
-//					  this.getView().setModel(this.oLocalModel);//global variable from sap.ui.getCore()
-//		  },
-//				 error: function (oError){
-//					  sap.m.MessageToast.show("You have not downloaded anything yet!");
-//				  }
-//				  
-//				  });
-			
-			
-//			var rowContext = oEvent.getParameter("rowContext");
-//			var documentTitle = rowContext.getObject().title;
-//			var body = rowContext.getObject().body;
-//			var tags = rowContext.getObject().tags;
-//			console.log(documentTitle);
-//			this.dataModel.setData(rowContext);
-//			console.log(this.dataModel);
-//			sap.ui.getCore().setModel(this.dataModel);
-//			var oRouter = sap.ui.core.routing.Router.getRouter("appRouter");
-//			oHashChanger = sap.ui.core.routing.HashChanger.getInstance();
-//			oHashChanger.setHash(oRouter.getURL('PageDetail'));
-			},
-		acceptTags: function(oEvent) {
-			
+			var docId = this.detailModel.oData.id
+			//var that = this;
+			console.log('Model from Detail: ', docId);
+			$.ajax({
+				  type : "POST", 
+				  url : "http://localhost:5000/api/confluencedata/tag",
+				  async : false,
+				  data: $.param({docId}),
+				  success: function (data) {
+					  this.getags = data;
+					  console.log(this.getags);
+					  this.detailModel = sap.ui.getCore().getModel();
+					  //this.detailModel.setData({tags: this.getags});
+					  this.detailModel.setProperty("/newtags", this.getags.tags);
+					  //console.log(this.detailModel);
+					  //that.getView().setModel().setProperty("/recipient/newtags", this.getags);
+				  },
+				 error: function (oError){
+					  sap.m.MessageToast.show("Something went wrong with tag generation!");
+				  }
+			  });
 		},
-		rejectTags: function(oEvent) {
+		acceptTags: function() {
+			var originalTags = this.detailModel.getProperty("/tags");
+			var newTags = this.detailModel.getProperty("/newtags");
+			var docId = this.detailModel.oData.id
+			$.ajax({
+				  type : "POST", 
+				  url : "http://localhost:5000/api/confluencedata/save/tag",
+				  async : false,
+				  data: $.param({docId, originalTags, newTags}),
+				  success: function (data) {
+					  this.getags = data;
+					  var updatedTags = this.getags.tags
+					  console.log("new tags", this.getags);
+					  this.detailModel = sap.ui.getCore().getModel();
+					  this.detailModel.setProperty("/tags", updatedTags);
+					  //console.log(this.detailModel);
+					  sap.m.MessageToast.show("Tags saved to database and uploaded to Confluence!");
+				  },
+				 error: function (oError){
+					  sap.m.MessageToast.show("Something went wrong with saving the tags!");
+				  }
+			  });
+		},
+		rejectTags: function() {
 			
 		},
 
