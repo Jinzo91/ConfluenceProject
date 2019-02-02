@@ -80,7 +80,6 @@ sap.ui.controller("webApp.controller.PageOverview",{
 				var oBinding = oList.getBinding("rows");
 				cFilter.push(new sap.ui.model.Sorter("tags", bDescending=false));
 				oBinding.sort(cFilter);
-					
 				}
 				this.i = this.i+1
 				//new sap.ui.model.Filter("title", sap.ui.model.FilterOperator.Contains, sQuery)
@@ -89,6 +88,7 @@ sap.ui.controller("webApp.controller.PageOverview",{
 			//when click button at first time, show table content in descending sort based on "date"
 			//the second click show in ascending sort 
 			sortByDate: function(oEvent){
+				console.log(this.j);
 				if (this.j % 2 == 1){
 					var cFilter = [];
 					var oList = this.byId("pageoverview");

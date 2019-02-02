@@ -14,27 +14,30 @@
 		<subHeader>
 			<Toolbar>
 				<Button type="Back" tooltip="Back" press="onNavBack"/>
-				<Label text="{/title}"/>
 			</Toolbar>
 		</subHeader>
 		<Panel>
 			<VBox
 			class="sapUiSmallMargin"
 			>
+				<html:h1>
+				<html:center>
+					<Text text="{/title}" class="header"/>
+				</html:center>
+				</html:h1>
 				<Label text="{/date}"/>
+				<Label id="docId" text="{/id}"/>
 				
-				<Label id="docId"
-				text="{/id}"/>
 				
-				<html:center style = "margin:40px">							
+				<html:center style = "margin:20px">							
 				<commons:FormattedTextView
             		htmlText="{/body}" />		
-				</html:center>
+				</html:center>	
 
 				<html:div align="left"
 				style = "margin:20px">
 				<Label text="Tags:"/>
-				<html:p style = "margin:20px" >
+				<html:p style = "margin:10px" >
 				<Text 
 				text="{/tags}"/>
 				</html:p>
@@ -43,8 +46,7 @@
 				<html:div align="left"
 				style = "margin:20px">
 				<Button 
-				type="Transparent"
-				text="Generate Tags:"
+				text="Generate Tags"
 				icon="sap-icon://tag"
 				press="generateTags"/>
 				</html:div>
