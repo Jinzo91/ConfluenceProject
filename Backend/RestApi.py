@@ -98,7 +98,7 @@ def login_user():
 def get_all_confluenceData():
     confluencedata = mongo.db.confluencedata
     output = []
-    for u in confluencedata.find({'name': 'se.bastian.esch@gmail.com'}):
+    for u in confluencedata.find({'name': globalUser}):
         output.append({'documentId' : u['documentId'], 'title' : u['title'], 'date' : u['date'], 'body' : u['body'], 'tags' : u['tags']})
     return jsonify({'result' : output}) #every return has HTTP status code
 
